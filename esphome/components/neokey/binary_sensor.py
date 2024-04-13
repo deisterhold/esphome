@@ -1,32 +1,33 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import binary_sensor
-from esphome.const import CONF_ADDRESS
+from esphome.const import (
+    CONF_KEY,
+    CONF_ID,
+)
+from . import neokey_ns, NeoKeyComponent
 
 CODEOWNERS = ["@deisterhold"]
 
-DEPENDENCIES = ["i2c"]
+DEPENDENCIES = ["neokey"]
 
-neokey_ns = cg.esphome_ns.namespace("neokey")
+CONF_NEOKEY_ID = "neokey_id"
 
-NeoKeyBinarySensor = neokey_ns.class_(
-    "NeoKeyBinarySensor", binary_sensor.BinarySensor, cg.Component
-)
+NeoKeyBinarySensor = neokey_ns.class_("NeoKeyBinarySensor", binary_sensor.BinarySensor)
 
-CONFIG_SCHEMA = (
-    binary_sensor.binary_sensor_schema(NeoKeyBinarySensor)
-    .extend({cv.Optional(CONF_ADDRESS, default=0x30): cv.i2c_address})
-    .extend(cv.COMPONENT_SCHEMA)
+CONFIG_SCHEMA = binary_sensor.binary_sensor_schema(NeoKeyBinarySensor).extend(
+    {
+        cv.GenerateID(CONF_NEOKEY_ID): cv.use_id(NeoKeyComponent),
+        cv.Required(CONF_KEY): cv.int_range(min=1, max=4),
+    }
 )
 
 
 async def to_code(config):
-    var = await binary_sensor.new_binary_sensor(config)
-    await cg.register_component(var, config)
-
-    cg.add(var.set_address(config[CONF_ADDRESS]))
-
-    cg.add_library("SPI", None)
-    cg.add_library("Wire", None)
-    cg.add_library("adafruit/Adafruit BusIO", None)
-    cg.add_library("adafruit/Adafruit seesaw Library", None)
+    neokey = await cg.get_variable(config[CONF_NEOKEY_ID])
+    var = cg.new_Pvariable(
+        config[CONF_ID],
+        config[CONF_KEY],
+    )
+    await binary_sensor.register_binary_sensor(var, config)
+    cg.add(neokey.register_key(var))
