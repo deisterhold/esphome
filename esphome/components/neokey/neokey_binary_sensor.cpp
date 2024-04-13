@@ -9,7 +9,7 @@ static const char *const TAG = "neokey.binary_sensor";
 void NeoKeyBinarySensor::setup() {
   ESP_LOGCONFIG(TAG, "Setting up NeoKey...");
 
-  if (!neokey.begin(address_)) {
+  if (!neokey_.begin(address_)) {
     this->mark_failed();
     return;
   }
