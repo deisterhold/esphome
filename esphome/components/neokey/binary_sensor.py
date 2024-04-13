@@ -26,5 +26,5 @@ async def to_code(config):
 
     cg.add(var.set_address(config[CONF_ADDRESS]))
 
-    cg.add_library("adafruit/Adafruit BusIO")
-    cg.add_library("adafruit/Adafruit seesaw Library")
+    cg.add_library("adafruit/Adafruit BusIO", None)
+    cg.add_library("adafruit/Adafruit seesaw Library", None)
