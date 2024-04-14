@@ -16,7 +16,7 @@ void NeoKeyComponent::setup() {
 
   // set callbacks
   for(int i=0; i<NEOKEY_1X4_KEYS; i++){
-    this->neokey->registerCallback(i, key_callback);
+    this->neokey_->registerCallback(i, key_callback);
   }
 
   // for (auto *child : this->children_) {
