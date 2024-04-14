@@ -12,12 +12,6 @@ neokey_ns = cg.esphome_ns.namespace("neokey")
 NeoKeyComponent = neokey_ns.class_("NeoKeyComponent", cg.Component)
 
 
-def validate_key_index(value):
-    if value not in [1, 2, 3, 4]:
-        raise cv.Invalid(f"Key {value} is out of range.")
-    return value
-
-
 CONFIG_SCHEMA = cv.All(
     cv.Schema(
         {
