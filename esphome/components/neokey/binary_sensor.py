@@ -18,7 +18,7 @@ NeoKeyBinarySensor = neokey_ns.class_("NeoKeyBinarySensor", binary_sensor.Binary
 CONFIG_SCHEMA = binary_sensor.binary_sensor_schema(NeoKeyBinarySensor).extend(
     {
         cv.GenerateID(CONF_NEOKEY_ID): cv.use_id(NeoKeyComponent),
-        cv.Required(CONF_KEY): cv.int_range(min=1, max=4),
+        cv.Required(CONF_KEY): cv.int_range(min=0, max=3),
     }
 )
 

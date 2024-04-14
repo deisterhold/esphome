@@ -14,11 +14,7 @@ class NeoKeyBinarySensor;
 class NeoKeyComponent : public Component {
  public:
   void register_key(NeoKeyBinarySensor *key) { this->children_.push_back(key); }
-
   void set_address(uint8_t address) { this->address_ = address; }
-
-  // uint32_t component_key_read(touch_pad_t tp);
-  NeoKey1x4Callback key_callback(keyEvent evt);
 
   void setup() override;
   void loop() override;
