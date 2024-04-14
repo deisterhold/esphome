@@ -16,7 +16,7 @@ void NeoKeyComponent::setup() {
 }
 
 void NeoKeyComponent::loop() {
-  uint8_t buttons = neokey.read();
+  uint8_t buttons = neokey_.read();
 
   // Check each button
   for (auto *child : this->children_) {
