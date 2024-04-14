@@ -26,7 +26,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_KEY_2): binary_sensor.binary_sensor_schema(),
             cv.Optional(CONF_KEY_3): binary_sensor.binary_sensor_schema(),
             cv.Optional(CONF_KEY_4): binary_sensor.binary_sensor_schema(),
-        }
+        },
     )
     .extend(cv.COMPONENT_SCHEMA)
     .extend(i2c.i2c_device_schema(0x30))
