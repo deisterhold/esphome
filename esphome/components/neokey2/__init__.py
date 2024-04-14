@@ -5,8 +5,9 @@ from esphome.const import (
     CONF_ID,
 )
 
+AUTO_LOAD = ["binary_sensor"]
 CODEOWNERS = ["@deisterhold"]
-DEPENDENCIES = ["binary_sensor", "i2c"]
+DEPENDENCIES = ["i2c"]
 
 neokey2_ns = cg.esphome_ns.namespace("neokey2")
 NeoKey2Component = neokey2_ns.class_("NeoKey2Component", cg.Component, i2c.I2CDevice)
