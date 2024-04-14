@@ -18,7 +18,7 @@ CONF_KEY_3 = "key_3"
 CONF_KEY_4 = "key_4"
 
 
-CONFIG_SCHEMA = cv.All(
+CONFIG_SCHEMA = (
     cv.Schema(
         {
             cv.GenerateID(): cv.declare_id(NeoKey2Component),
