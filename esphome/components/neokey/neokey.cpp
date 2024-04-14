@@ -20,11 +20,12 @@ void NeoKeyComponent::loop() {
 
   // Check each button
   for (auto *child : this->children_) {
-    if (buttons & (1 << child->key_)) {
-      ESP_LOGD(TAG, "Key %d press" , i);
+    uint8_t key = child->key_;
+    if (buttons & (1 << key)) {
+      ESP_LOGD(TAG, "Key %d press" , key);
       child->publish_state(true);
     } else {
-      ESP_LOGD(TAG, "Key %d release" , i);
+      ESP_LOGD(TAG, "Key %d release" , key);
       child->publish_state(false);
     }
   }
