@@ -26,7 +26,10 @@ class NeoKey2Component : public Component, public i2c::I2CDevice, public light::
 
   int32_t size() const override { return (int_32t)this->neokey_.pixels.numPixels(); }
   void write_state(light::LightState *state) override;
-  void clear_effect_data() const override {}
+  void clear_effect_data() override {
+    for (int i = 0; i < this->size(); i++)
+      this->effect_data_[i] = 0;
+  }
   light::LightTraits get_traits() override {
     auto traits = light::LightTraits();
     traits.set_supported_color_modes({light::ColorMode::RGB});
