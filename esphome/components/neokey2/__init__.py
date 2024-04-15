@@ -1,6 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import binary_sensor, i2c
+from esphome.components import binary_sensor, i2c, light
 from esphome.const import (
     CONF_ID,
 )
@@ -10,7 +10,9 @@ CODEOWNERS = ["@deisterhold"]
 DEPENDENCIES = ["i2c"]
 
 neokey2_ns = cg.esphome_ns.namespace("neokey2")
-NeoKey2Component = neokey2_ns.class_("NeoKey2Component", cg.Component, i2c.I2CDevice)
+NeoKey2Component = neokey2_ns.class_(
+    "NeoKey2Component", cg.Component, i2c.I2CDevice, light.AddressableLight
+)
 
 
 CONF_KEY_1 = "key_1"
@@ -31,6 +33,7 @@ CONFIG_SCHEMA = (
     )
     .extend(cv.COMPONENT_SCHEMA)
     .extend(i2c.i2c_device_schema(0x30))
+    .extend(light.ADDRESSABLE_LIGHT_SCHEMA)
 )
 
 
@@ -38,7 +41,9 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
     await i2c.register_i2c_device(var, config)
+    await light.register_light(var, config)
 
+    # Keys
     if CONF_KEY_1 in config:
         bs = await binary_sensor.new_binary_sensor(config[CONF_KEY_1])
         cg.add(var.set_key_1_sensor(bs))
@@ -51,6 +56,20 @@ async def to_code(config):
     if CONF_KEY_4 in config:
         bs = await binary_sensor.new_binary_sensor(config[CONF_KEY_4])
         cg.add(var.set_key_4_sensor(bs))
+
+    # Lights
+    # if CONF_LIGHT_1 in config:
+    #     l = await light.new(config[CONF_LIGHT_1])
+    #     cg.add(var.set_key_1_light(l))
+    # if CONF_LIGHT_2 in config:
+    #     l = await light.new(config[CONF_LIGHT_2])
+    #     cg.add(var.set_key_2_light(l))
+    # if CONF_LIGHT_3 in config:
+    #     l = await light.new(config[CONF_LIGHT_3])
+    #     cg.add(var.set_key_3_light(l))
+    # if CONF_LIGHT_4 in config:
+    #     l = await light.new(config[CONF_LIGHT_4])
+    #     cg.add(var.set_key_4_light(l))
 
     cg.add_library("SPI", None)
     cg.add_library("Wire", None)

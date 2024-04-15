@@ -13,6 +13,8 @@ void NeoKey2Component::setup() {
     this->mark_failed();
     return;
   }
+
+  this->effect_data_ = new uint8_t[this->size()];
 }
 
 void NeoKey2Component::loop() {
@@ -58,6 +60,10 @@ void NeoKey2Component::dump_config() {
   LOG_BINARY_SENSOR("  ", "Key 2", this->key_2_sensor_);
   LOG_BINARY_SENSOR("  ", "Key 3", this->key_3_sensor_);
   LOG_BINARY_SENSOR("  ", "Key 4", this->key_4_sensor_);
+}
+
+void NeoKey2Component::write_state(light::LightState *state) {
+  ESP_LOGVV(TAG, "Writing state...");
 }
 
 }  // namespace neokey2
