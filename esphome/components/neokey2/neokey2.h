@@ -12,10 +12,10 @@
 namespace esphome {
 namespace neokey2 {
 
-class NeoKey2Component : public Component, public i2c::I2CDevice, public light::AddressableLight {
+class NeoKey2Component : public PollingComponent, public i2c::I2CDevice, public light::AddressableLight {
  public:
   void setup() override;
-  void loop() override;
+  void update() override;
   void dump_config() override;
   float get_setup_priority() const override { return setup_priority::DATA; }
 

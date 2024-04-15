@@ -11,7 +11,7 @@ DEPENDENCIES = ["i2c"]
 
 neokey2_ns = cg.esphome_ns.namespace("neokey2")
 NeoKey2Component = neokey2_ns.class_(
-    "NeoKey2Component", cg.Component, i2c.I2CDevice, light.AddressableLight
+    "NeoKey2Component", cg.PollingComponent, i2c.I2CDevice, light.AddressableLight
 )
 
 
@@ -31,7 +31,7 @@ CONFIG_SCHEMA = (
             cv.Required(CONF_KEY_4): binary_sensor.binary_sensor_schema(),
         },
     )
-    .extend(cv.COMPONENT_SCHEMA)
+    .extend(cv.polling_component_schema("10ms"))
     .extend(i2c.i2c_device_schema(0x30))
     .extend(light.ADDRESSABLE_LIGHT_SCHEMA)
 )
