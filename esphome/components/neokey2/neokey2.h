@@ -50,6 +50,13 @@ class NeoKey2Component : public PollingComponent, public i2c::I2CDevice, public 
   }
 
   void log_sensor(binary_sensor::BinarySensor *sensor);
+
+  uint8_t *effect_data_{nullptr};
+  ESPColorView get_view_internal(int32_t index) {
+    auto view = light::ESPColorView();
+
+    return view;
+  }
 };
 
 }  // namespace neokey2

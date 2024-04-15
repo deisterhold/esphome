@@ -28,6 +28,7 @@ void NeoKey2Component::setup() {
     this->neokey_.pixels.show();
     delay(50);
   }
+  this->effect_data_ = new uint8_t[this->size()];
 }
 
 void NeoKey2Component::update() {
@@ -57,6 +58,10 @@ void NeoKey2Component::write_state(light::LightState *state) {
 
 void NeoKey2Component::log_sensor(binary_sensor::BinarySensor *sensor) {
   ESP_LOGD(TAG, "%s %s", sensor->get_name().c_str(), sensor->state ? "pressed" : "released");
+}
+
+void NeoKey2Component::write_state(light::LightState *state) {
+  ESP_LOGVV(TAG, "Writing state...");
 }
 
 }  // namespace neokey2
