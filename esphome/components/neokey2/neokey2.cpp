@@ -34,40 +34,32 @@ void NeoKey2Component::loop() {
   uint8_t buttons = this->neokey_.read();
 
   // Check each button
-  if (this->key_1_sensor_ != nullptr) {
-    this->key_1_sensor_->publish_state(buttons & (1 << 0));
-    if (this->key_1_sensor_->state) {
-      ESP_LOGD(TAG, "Key 1 press");
-    } else {
-      ESP_LOGD(TAG, "Key 1 release");
-    }
+  this->key_1_sensor_->publish_state(buttons & (1 << 0));
+  if (this->key_1_sensor_->state) {
+    ESP_LOGD(TAG, "Key 1 press");
+  } else {
+    ESP_LOGD(TAG, "Key 1 release");
   }
 
-  if (this->key_2_sensor_ != nullptr) {
-    this->key_2_sensor_->publish_state(buttons & (1 << 1));
-    if (this->key_2_sensor_->state) {
-      ESP_LOGD(TAG, "Key 2 press");
-    } else {
-      ESP_LOGD(TAG, "Key 2 release");
-    }
+  this->key_2_sensor_->publish_state(buttons & (1 << 1));
+  if (this->key_2_sensor_->state) {
+    ESP_LOGD(TAG, "Key 2 press");
+  } else {
+    ESP_LOGD(TAG, "Key 2 release");
   }
 
-  if (this->key_3_sensor_ != nullptr) {
-    this->key_3_sensor_->publish_state(buttons & (1 << 2));
-    if (this->key_3_sensor_->state) {
-      ESP_LOGD(TAG, "Key 3 press");
-    } else {
-      ESP_LOGD(TAG, "Key 3 release");
-    }
+  this->key_3_sensor_->publish_state(buttons & (1 << 2));
+  if (this->key_3_sensor_->state) {
+    ESP_LOGD(TAG, "Key 3 press");
+  } else {
+    ESP_LOGD(TAG, "Key 3 release");
   }
 
-  if (this->key_4_sensor_ != nullptr) {
-    this->key_4_sensor_->publish_state(buttons & (1 << 3));
-    if (this->key_4_sensor_->state) {
-      ESP_LOGD(TAG, "Key 4 press");
-    } else {
-      ESP_LOGD(TAG, "Key 4 release");
-    }
+  this->key_4_sensor_->publish_state(buttons & (1 << 3));
+  if (this->key_4_sensor_->state) {
+    ESP_LOGD(TAG, "Key 4 press");
+  } else {
+    ESP_LOGD(TAG, "Key 4 release");
   }
 }
 

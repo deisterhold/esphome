@@ -25,10 +25,10 @@ CONFIG_SCHEMA = (
     cv.Schema(
         {
             cv.GenerateID(): cv.declare_id(NeoKey2Component),
-            cv.Optional(CONF_KEY_1): binary_sensor.binary_sensor_schema(),
-            cv.Optional(CONF_KEY_2): binary_sensor.binary_sensor_schema(),
-            cv.Optional(CONF_KEY_3): binary_sensor.binary_sensor_schema(),
-            cv.Optional(CONF_KEY_4): binary_sensor.binary_sensor_schema(),
+            cv.Required(CONF_KEY_1): binary_sensor.binary_sensor_schema(),
+            cv.Required(CONF_KEY_2): binary_sensor.binary_sensor_schema(),
+            cv.Required(CONF_KEY_3): binary_sensor.binary_sensor_schema(),
+            cv.Required(CONF_KEY_4): binary_sensor.binary_sensor_schema(),
         },
     )
     .extend(cv.COMPONENT_SCHEMA)
@@ -43,19 +43,17 @@ async def to_code(config):
     await light.register_light(var, config)
     await i2c.register_i2c_device(var, config)
 
-    # Keys
-    if CONF_KEY_1 in config:
-        bs = await binary_sensor.new_binary_sensor(config[CONF_KEY_1])
-        cg.add(var.set_key_1_sensor(bs))
-    if CONF_KEY_2 in config:
-        bs = await binary_sensor.new_binary_sensor(config[CONF_KEY_2])
-        cg.add(var.set_key_2_sensor(bs))
-    if CONF_KEY_3 in config:
-        bs = await binary_sensor.new_binary_sensor(config[CONF_KEY_3])
-        cg.add(var.set_key_3_sensor(bs))
-    if CONF_KEY_4 in config:
-        bs = await binary_sensor.new_binary_sensor(config[CONF_KEY_4])
-        cg.add(var.set_key_4_sensor(bs))
+    bs1 = await binary_sensor.new_binary_sensor(config[CONF_KEY_1])
+    cg.add(var.set_key_1_sensor(bs1))
+
+    bs2 = await binary_sensor.new_binary_sensor(config[CONF_KEY_2])
+    cg.add(var.set_key_2_sensor(bs2))
+
+    bs3 = await binary_sensor.new_binary_sensor(config[CONF_KEY_3])
+    cg.add(var.set_key_3_sensor(bs3))
+
+    bs4 = await binary_sensor.new_binary_sensor(config[CONF_KEY_4])
+    cg.add(var.set_key_4_sensor(bs4))
 
     # Lights
     # if CONF_LIGHT_1 in config:
