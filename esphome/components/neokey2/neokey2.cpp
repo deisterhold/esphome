@@ -36,30 +36,30 @@ void NeoKey2Component::loop() {
   // Check each button
   this->key_1_sensor_->publish_state(buttons & (1 << 0));
   if (this->key_1_sensor_->state) {
-    ESP_LOGD(TAG, "Key 1 press");
+    ESP_LOGD(TAG, "%s pressed", get_name().c_str());
   } else {
-    ESP_LOGD(TAG, "Key 1 release");
+    ESP_LOGD(TAG, "%s released", get_name().c_str());
   }
 
   this->key_2_sensor_->publish_state(buttons & (1 << 1));
   if (this->key_2_sensor_->state) {
-    ESP_LOGD(TAG, "Key 2 press");
+    ESP_LOGD(TAG, "%s pressed", get_name().c_str());
   } else {
-    ESP_LOGD(TAG, "Key 2 release");
+    ESP_LOGD(TAG, "%s released", get_name().c_str());
   }
 
   this->key_3_sensor_->publish_state(buttons & (1 << 2));
   if (this->key_3_sensor_->state) {
-    ESP_LOGD(TAG, "Key 3 press");
+    ESP_LOGD(TAG, "%s pressed", get_name().c_str());
   } else {
-    ESP_LOGD(TAG, "Key 3 release");
+    ESP_LOGD(TAG, "%s released", get_name().c_str());
   }
 
   this->key_4_sensor_->publish_state(buttons & (1 << 3));
   if (this->key_4_sensor_->state) {
-    ESP_LOGD(TAG, "Key 4 press");
+    ESP_LOGD(TAG, "%s pressed", get_name().c_str());
   } else {
-    ESP_LOGD(TAG, "Key 4 release");
+    ESP_LOGD(TAG, "%s released", get_name().c_str());
   }
 }
 
