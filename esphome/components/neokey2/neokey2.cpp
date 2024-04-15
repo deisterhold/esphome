@@ -9,12 +9,25 @@ static const char *const TAG = "neokey2";
 void NeoKey2Component::setup() {
   ESP_LOGCONFIG(TAG, "Setting up NeoKey...");
 
+  this->effect_data_ = new uint8_t[this->size()];
+
   if (!this->neokey_.begin(this->address_)) {
     this->mark_failed();
     return;
   }
 
-  this->effect_data_ = new uint8_t[this->size()];
+  // Pulse all the LEDs on to show we're working
+  for (uint16_t i=0; i<this->neokey_.pixels.numPixels(); i++) {
+    this->neokey_.pixels.setPixelColor(i, 0x808080); // make each LED white
+    this->neokey_.pixels.show();
+    delay(50);
+  }
+
+  for (uint16_t i=0; i<this->neokey_.pixels.numPixels(); i++) {
+    this->neokey_.pixels.setPixelColor(i, 0x000000);
+    this->neokey_.pixels.show();
+    delay(50);
+  }
 }
 
 void NeoKey2Component::loop() {
