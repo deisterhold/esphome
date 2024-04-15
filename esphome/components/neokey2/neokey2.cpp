@@ -17,13 +17,13 @@ void NeoKey2Component::setup() {
   }
 
   // Pulse all the LEDs on to show we're working
-  for (uint16_t i=0; i<this->neokey_.pixels.numPixels(); i++) {
-    this->neokey_.pixels.setPixelColor(i, 0x808080); // make each LED white
+  for (uint16_t i = 0; i < this->neokey_.pixels.numPixels(); i++) {
+    this->neokey_.pixels.setPixelColor(i, 0x808080);  // make each LED white
     this->neokey_.pixels.show();
     delay(50);
   }
 
-  for (uint16_t i=0; i<this->neokey_.pixels.numPixels(); i++) {
+  for (uint16_t i = 0; i < this->neokey_.pixels.numPixels(); i++) {
     this->neokey_.pixels.setPixelColor(i, 0x000000);
     this->neokey_.pixels.show();
     delay(50);
@@ -34,34 +34,40 @@ void NeoKey2Component::loop() {
   uint8_t buttons = this->neokey_.read();
 
   // Check each button
-
-  this->key_1_sensor_->publish_state(buttons & (1 << 0));
-  this->key_2_sensor_->publish_state(buttons & (1 << 1));
-  this->key_3_sensor_->publish_state(buttons & (1 << 2));
-  this->key_4_sensor_->publish_state(buttons & (1 << 3));
-
-  if (this->key_1_sensor_->state) {
-    ESP_LOGD(TAG, "Key 1 press");
-  } else {
-    ESP_LOGD(TAG, "Key 1 release");
+  if (this->key_1_sensor_ != nullptr) {
+    this->key_1_sensor_->publish_state(buttons & (1 << 0));
+    if (this->key_1_sensor_->state) {
+      ESP_LOGD(TAG, "Key 1 press");
+    } else {
+      ESP_LOGD(TAG, "Key 1 release");
+    }
   }
 
-  if (this->key_2_sensor_->state) {
-    ESP_LOGD(TAG, "Key 2 press");
-  } else {
-    ESP_LOGD(TAG, "Key 2 release");
+  if (this->key_2_sensor_ != nullptr) {
+    this->key_2_sensor_->publish_state(buttons & (1 << 1));
+    if (this->key_2_sensor_->state) {
+      ESP_LOGD(TAG, "Key 2 press");
+    } else {
+      ESP_LOGD(TAG, "Key 2 release");
+    }
   }
 
-  if (this->key_3_sensor_->state) {
-    ESP_LOGD(TAG, "Key 3 press");
-  } else {
-    ESP_LOGD(TAG, "Key 3 release");
+  if (this->key_3_sensor_ != nullptr) {
+    this->key_3_sensor_->publish_state(buttons & (1 << 2));
+    if (this->key_3_sensor_->state) {
+      ESP_LOGD(TAG, "Key 3 press");
+    } else {
+      ESP_LOGD(TAG, "Key 3 release");
+    }
   }
 
-  if (this->key_4_sensor_->state) {
-    ESP_LOGD(TAG, "Key 4 press");
-  } else {
-    ESP_LOGD(TAG, "Key 4 release");
+  if (this->key_4_sensor_ != nullptr) {
+    this->key_4_sensor_->publish_state(buttons & (1 << 3));
+    if (this->key_4_sensor_->state) {
+      ESP_LOGD(TAG, "Key 4 press");
+    } else {
+      ESP_LOGD(TAG, "Key 4 release");
+    }
   }
 }
 
