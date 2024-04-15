@@ -32,19 +32,13 @@ void NeoKey2Component::setup() {
 
 void NeoKey2Component::loop() {
   uint8_t buttons = this->neokey_.read();
-
+  ESP_LOGD(TAG, "Buttons: 0b" BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(buttons));
+  
   // Check each button
   this->key_1_sensor_->publish_state(buttons & (1 << 0));
-  log_sensor(this->key_1_sensor_);
-
   this->key_2_sensor_->publish_state(buttons & (1 << 1));
-  log_sensor(this->key_2_sensor_);
-
   this->key_3_sensor_->publish_state(buttons & (1 << 2));
-  log_sensor(this->key_3_sensor_);
-
   this->key_4_sensor_->publish_state(buttons & (1 << 3));
-  log_sensor(this->key_4_sensor_);
 }
 
 void NeoKey2Component::dump_config() {
