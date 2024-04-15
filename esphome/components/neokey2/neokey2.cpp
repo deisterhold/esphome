@@ -35,32 +35,16 @@ void NeoKey2Component::loop() {
 
   // Check each button
   this->key_1_sensor_->publish_state(buttons & (1 << 0));
-  if (this->key_1_sensor_->state) {
-    ESP_LOGD(TAG, "%s pressed", get_name().c_str());
-  } else {
-    ESP_LOGD(TAG, "%s released", get_name().c_str());
-  }
+  log_sensor(this->key_1_sensor_->state)
 
   this->key_2_sensor_->publish_state(buttons & (1 << 1));
-  if (this->key_2_sensor_->state) {
-    ESP_LOGD(TAG, "%s pressed", get_name().c_str());
-  } else {
-    ESP_LOGD(TAG, "%s released", get_name().c_str());
-  }
+  log_sensor(this->key_2_sensor_->state)
 
   this->key_3_sensor_->publish_state(buttons & (1 << 2));
-  if (this->key_3_sensor_->state) {
-    ESP_LOGD(TAG, "%s pressed", get_name().c_str());
-  } else {
-    ESP_LOGD(TAG, "%s released", get_name().c_str());
-  }
+  log_sensor(this->key_3_sensor_->state)
 
   this->key_4_sensor_->publish_state(buttons & (1 << 3));
-  if (this->key_4_sensor_->state) {
-    ESP_LOGD(TAG, "%s pressed", get_name().c_str());
-  } else {
-    ESP_LOGD(TAG, "%s released", get_name().c_str());
-  }
+  log_sensor(this->key_4_sensor_->state)
 }
 
 void NeoKey2Component::dump_config() {
@@ -75,6 +59,10 @@ void NeoKey2Component::dump_config() {
 
 void NeoKey2Component::write_state(light::LightState *state) {
   ESP_LOGVV(TAG, "Writing state...");
+}
+
+void NeoKey2Component::log_sensor(binary_sensor::BinarySensor *sensor) {
+  ESP_LOGD(TAG, "%s %s", sensor->get_name().c_str(), sensor->state ? "pressed" : "released");
 }
 
 }  // namespace neokey2

@@ -48,6 +48,8 @@ class NeoKey2Component : public Component, public i2c::I2CDevice, public light::
 
     return view;
   }
+
+  void log_sensor(binary_sensor::BinarySensor *sensor);
 };
 
 }  // namespace neokey2
