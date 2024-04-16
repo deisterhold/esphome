@@ -15,7 +15,7 @@ namespace neokey2 {
 class NeoKey2Component : public light::AddressableLight, public i2c::I2CDevice {
  public:
   void setup() override;
-  void update() override;
+  void loop() override;
   void dump_config() override;
   float get_setup_priority() const override { return setup_priority::DATA; }
 
@@ -24,7 +24,7 @@ class NeoKey2Component : public light::AddressableLight, public i2c::I2CDevice {
   void set_key_3_sensor(binary_sensor::BinarySensor *sensor) { key_3_sensor_ = sensor; }
   void set_key_4_sensor(binary_sensor::BinarySensor *sensor) { key_4_sensor_ = sensor; }
 
-  int32_t size() const override { return (int_32t)this->neokey_.pixels.numPixels(); }
+  int32_t size() const override { return this->neokey_.pixels.numPixels(); }
   void write_state(light::LightState *state) override;
   void clear_effect_data() override {
     for (int i = 0; i < this->size(); i++)
@@ -45,7 +45,7 @@ class NeoKey2Component : public light::AddressableLight, public i2c::I2CDevice {
   uint8_t *buf_{nullptr};
   uint8_t *effect_data_{nullptr};
   
-  ESPColorView get_view_internal(int32_t index) {
+  light::ESPColorView get_view_internal(int32_t index) {
     size_t pos = index * 3;
 
     return {
