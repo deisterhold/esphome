@@ -21,20 +21,15 @@ CONF_KEY_3 = "key_3"
 CONF_KEY_4 = "key_4"
 
 
-CONFIG_SCHEMA = (
-    cv.Schema(
-        {
-            cv.GenerateID(): cv.declare_id(NeoKey2Component),
-            cv.Required(CONF_KEY_1): binary_sensor.binary_sensor_schema(),
-            cv.Required(CONF_KEY_2): binary_sensor.binary_sensor_schema(),
-            cv.Required(CONF_KEY_3): binary_sensor.binary_sensor_schema(),
-            cv.Required(CONF_KEY_4): binary_sensor.binary_sensor_schema(),
-        },
-    )
-    .extend(cv.polling_component_schema("10ms"))
-    .extend(i2c.i2c_device_schema(0x30))
-    .extend(light.ADDRESSABLE_LIGHT_SCHEMA)
-)
+CONFIG_SCHEMA = light.ADDRESSABLE_LIGHT_SCHEMA.extend(
+    {
+        cv.GenerateID(): cv.declare_id(NeoKey2Component),
+        cv.Required(CONF_KEY_1): binary_sensor.binary_sensor_schema(),
+        cv.Required(CONF_KEY_2): binary_sensor.binary_sensor_schema(),
+        cv.Required(CONF_KEY_3): binary_sensor.binary_sensor_schema(),
+        cv.Required(CONF_KEY_4): binary_sensor.binary_sensor_schema(),
+    }
+).extend(i2c.i2c_device_schema(0x30))
 
 
 async def to_code(config):

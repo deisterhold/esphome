@@ -12,7 +12,7 @@
 namespace esphome {
 namespace neokey2 {
 
-class NeoKey2Component : public PollingComponent, public i2c::I2CDevice, public light::AddressableLight {
+class NeoKey2Component : public light::AddressableLight, public i2c::I2CDevice {
  public:
   void setup() override;
   void update() override;
