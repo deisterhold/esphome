@@ -8,7 +8,13 @@ static const char *const TAG = "neokey2";
 void NeoKey2Component::setup() {
   ESP_LOGCONFIG(TAG, "Setting up NeoKey...");
 
+  // Byte each for Red, Green, and Blue
+  this->buf_ = new uint8_t[this->size() * 3]; 
   this->effect_data_ = new uint8_t[this->size()];
+
+  // Clear buffer
+  memset(this->buf_, 0x00, this->size() * 3);
+  memset(this->effect_data_, 0x00, this->size());
 
   if (!this->neokey_.begin(this->address_)) {
     this->mark_failed();
@@ -27,10 +33,6 @@ void NeoKey2Component::setup() {
     this->neokey_.pixels.show();
     delay(50);
   }
-
-  // Byte each for Red, Green, and Blue
-  this->buf_ = new uint8_t[this->size() * 3]; 
-  this->effect_data_ = new uint8_t[this->size()];
 }
 
 void NeoKey2Component::loop() {
