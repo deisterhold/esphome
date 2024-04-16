@@ -5,7 +5,7 @@ from esphome.const import (
     CONF_OUTPUT_ID,
 )
 
-AUTO_LOAD = ["binary_sensor"]
+AUTO_LOAD = ["binary_sensor", "light"]
 CODEOWNERS = ["@deisterhold"]
 DEPENDENCIES = ["i2c"]
 
