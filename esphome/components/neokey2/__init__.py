@@ -2,7 +2,7 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import binary_sensor, i2c, light
 from esphome.const import (
-    CONF_ID,
+    CONF_OUTPUT_ID,
 )
 
 AUTO_LOAD = ["binary_sensor"]
@@ -11,7 +11,7 @@ DEPENDENCIES = ["i2c"]
 
 neokey2_ns = cg.esphome_ns.namespace("neokey2")
 NeoKey2Component = neokey2_ns.class_(
-    "NeoKey2Component", cg.PollingComponent, i2c.I2CDevice, light.AddressableLight
+    "NeoKey2Component", light.AddressableLight, i2c.I2CDevice
 )
 
 
@@ -23,7 +23,7 @@ CONF_KEY_4 = "key_4"
 
 CONFIG_SCHEMA = light.ADDRESSABLE_LIGHT_SCHEMA.extend(
     {
-        cv.GenerateID(): cv.declare_id(NeoKey2Component),
+        cv.GenerateID(CONF_OUTPUT_ID): cv.declare_id(NeoKey2Component),
         cv.Required(CONF_KEY_1): binary_sensor.binary_sensor_schema(),
         cv.Required(CONF_KEY_2): binary_sensor.binary_sensor_schema(),
         cv.Required(CONF_KEY_3): binary_sensor.binary_sensor_schema(),
@@ -33,7 +33,7 @@ CONFIG_SCHEMA = light.ADDRESSABLE_LIGHT_SCHEMA.extend(
 
 
 async def to_code(config):
-    var = cg.new_Pvariable(config[CONF_ID])
+    var = cg.new_Pvariable(config[CONF_OUTPUT_ID])
     await light.register_light(var, config)
     await i2c.register_i2c_device(var, config)
     await cg.register_component(var, config)
