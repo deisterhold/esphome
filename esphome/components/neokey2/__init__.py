@@ -39,9 +39,9 @@ CONFIG_SCHEMA = (
 
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
-    await cg.register_component(var, config)
     await light.register_light(var, config)
     await i2c.register_i2c_device(var, config)
+    await cg.register_component(var, config)
 
     bs1 = await binary_sensor.new_binary_sensor(config[CONF_KEY_1])
     cg.add(var.set_key_1_sensor(bs1))
@@ -54,20 +54,6 @@ async def to_code(config):
 
     bs4 = await binary_sensor.new_binary_sensor(config[CONF_KEY_4])
     cg.add(var.set_key_4_sensor(bs4))
-
-    # Lights
-    # if CONF_LIGHT_1 in config:
-    #     l = await light.new(config[CONF_LIGHT_1])
-    #     cg.add(var.set_key_1_light(l))
-    # if CONF_LIGHT_2 in config:
-    #     l = await light.new(config[CONF_LIGHT_2])
-    #     cg.add(var.set_key_2_light(l))
-    # if CONF_LIGHT_3 in config:
-    #     l = await light.new(config[CONF_LIGHT_3])
-    #     cg.add(var.set_key_3_light(l))
-    # if CONF_LIGHT_4 in config:
-    #     l = await light.new(config[CONF_LIGHT_4])
-    #     cg.add(var.set_key_4_light(l))
 
     cg.add_library("SPI", None)
     cg.add_library("Wire", None)

@@ -17,17 +17,20 @@ void NeoKey2Component::setup() {
   }
 
   // Pulse all the LEDs on to show we're working
-  for (uint16_t i = 0; i < this->neokey_.pixels.numPixels(); i++) {
+  for (size_t i = 0; i < this->size(); i++) {
     this->neokey_.pixels.setPixelColor(i, 0x808080);  // make each LED white
     this->neokey_.pixels.show();
     delay(50);
   }
 
-  for (uint16_t i = 0; i < this->neokey_.pixels.numPixels(); i++) {
+  for (size_t i = 0; i < this->size(); i++) {
     this->neokey_.pixels.setPixelColor(i, 0x000000);
     this->neokey_.pixels.show();
     delay(50);
   }
+
+  // Byte each for Red, Green, and Blue
+  this->buf_ = new uint8_t[this->size() * 3]; 
   this->effect_data_ = new uint8_t[this->size()];
 }
 
@@ -54,14 +57,12 @@ void NeoKey2Component::dump_config() {
 
 void NeoKey2Component::write_state(light::LightState *state) {
   ESP_LOGVV(TAG, "Writing state...");
-}
-
-void NeoKey2Component::log_sensor(binary_sensor::BinarySensor *sensor) {
-  ESP_LOGD(TAG, "%s %s", sensor->get_name().c_str(), sensor->state ? "pressed" : "released");
-}
-
-void NeoKey2Component::write_state(light::LightState *state) {
-  ESP_LOGVV(TAG, "Writing state...");
+  for (size_t i = 0; i < this->size(); i++) {
+    size_t pos = index * 3;
+    uint32_t color = (this->buf_ + pos + 2) << 16 & (this->buf_ + pos + 1) << 8 & (this->buf_ + pos + 0);
+    this->neokey_.pixels.setPixelColor(i, color);
+  }
+  this->neokey_.pixels.show();
 }
 
 }  // namespace neokey2
