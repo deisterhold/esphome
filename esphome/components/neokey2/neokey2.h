@@ -45,7 +45,7 @@ class NeoKey2Component : public light::AddressableLight, public i2c::I2CDevice {
   uint8_t *buf_{nullptr};
   uint8_t *effect_data_{nullptr};
   
-  light::ESPColorView get_view_internal(int32_t index) {
+  light::ESPColorView get_view_internal(int32_t index) const override {
     size_t pos = index * 3;
 
     return {
