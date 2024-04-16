@@ -58,7 +58,7 @@ void NeoKey2Component::write_state(light::LightState *state) {
   ESP_LOGVV(TAG, "Writing state...");
   for (size_t i = 0; i < this->size(); i++) {
     size_t pos = i * 3;
-    uint32_t color = (this->buf_ + pos + 2) << 16 & (this->buf_ + pos + 1) << 8 & (this->buf_ + pos + 0);
+    uint32_t color = *(this->buf_ + pos + 2) << 16 & *(this->buf_ + pos + 1) << 8 & *(this->buf_ + pos + 0);
     this->neokey_.pixels.setPixelColor(i, color);
   }
   this->neokey_.pixels.show();
