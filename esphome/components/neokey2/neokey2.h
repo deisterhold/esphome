@@ -1,10 +1,10 @@
 #pragma once
 
 #include "esphome/core/component.h"
+#include "esphome/core/log.h"
 #include "esphome/components/binary_sensor/binary_sensor.h"
 #include "esphome/components/i2c/i2c.h"
 #include "esphome/components/light/addressable_light.h"
-#include "esphome/components/light/light_output.h"
 
 #include "Adafruit_NeoKey_1x4.h"
 #include "seesaw_neopixel.h"

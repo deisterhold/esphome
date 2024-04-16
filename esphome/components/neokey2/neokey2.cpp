@@ -1,5 +1,4 @@
 #include "neokey2.h"
-#include "esphome/core/log.h"
 
 namespace esphome {
 namespace neokey2 {
