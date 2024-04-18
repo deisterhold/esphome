@@ -8,14 +8,6 @@ static const char *const TAG = "neokey";
 void NeoKeyComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up NeoKey...");
 
-  // Byte each for Red, Green, and Blue
-  this->buf_ = new uint8_t[this->size() * 3]; 
-  this->effect_data_ = new uint8_t[this->size()];
-
-  // Clear buffer
-  memset(this->buf_, 0x00, this->size() * 3);
-  memset(this->effect_data_, 0x00, this->size());
-
   if (!this->neokey_.begin(this->address_)) {
     this->mark_failed();
     return;
@@ -35,41 +27,24 @@ void NeoKeyComponent::setup() {
   }
 }
 
-void NeoKeyComponent::loop() {
-  uint8_t buttons = this->neokey_.read();
-  ESP_LOGVV(TAG, "Buttons: 0b" BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(buttons));
+void NeoKeyComponent::update() {
+  uint8_t keys = this->neokey_.read();
+  ESP_LOGVV(TAG, "Keys: 0b" BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(keys));
 
-  // Check each button
-  this->key_1_sensor_->publish_state(buttons & (1 << 0));
-  this->key_2_sensor_->publish_state(buttons & (1 << 1));
-  this->key_3_sensor_->publish_state(buttons & (1 << 2));
-  this->key_4_sensor_->publish_state(buttons & (1 << 3));
+  if (this->listeners_.empty())
+    return;
+
+  for (auto &listener : this->listeners_)
+    listener->keys_update(keys);
 }
 
 void NeoKeyComponent::dump_config() {
-  ESP_LOGCONFIG(TAG, "Config for NeoKey:");
+  ESP_LOGCONFIG(TAG, "NeoKey:");
   LOG_I2C_DEVICE(this);
-
-  LOG_BINARY_SENSOR("  ", "Key 1", this->key_1_sensor_);
-  LOG_BINARY_SENSOR("  ", "Key 2", this->key_2_sensor_);
-  LOG_BINARY_SENSOR("  ", "Key 3", this->key_3_sensor_);
-  LOG_BINARY_SENSOR("  ", "Key 4", this->key_4_sensor_);
-}
-
-void NeoKeyComponent::write_state(light::LightState *state) {
-  ESP_LOGD(TAG, "Writing state...");
-  for (size_t i = 0; i < this->size(); i++) {
-    size_t pos = i * 3;
-    uint8_t red = *(this->buf_ + pos + 0);
-    uint8_t green = *(this->buf_ + pos + 1);
-    uint8_t blue = *(this->buf_ + pos + 2);
-    ESP_LOGD(TAG, "Red:   0b" BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(red));
-    ESP_LOGD(TAG, "Green: 0b" BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(green));
-    ESP_LOGD(TAG, "Blue:  0b" BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(blue));
-
-    this->neokey_.pixels.setPixelColor(i, red, green, blue);
+  if (this->is_failed()) {
+    ESP_LOGE(TAG, "Communication with NeoKey failed!");
   }
-  this->neokey_.pixels.show();
+  LOG_UPDATE_INTERVAL(this);
 }
 
 }  // namespace neokey
