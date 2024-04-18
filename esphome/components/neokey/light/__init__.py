@@ -10,6 +10,7 @@ NeoKeyLight = neokey_ns.class_("NeoKeyLight", light.AddressableLight)
 
 CONFIG_SCHEMA = light.ADDRESSABLE_LIGHT_SCHEMA.extend(
     {
+        cv.GenerateID(): cv.declare_id(NeoKeyLight),
         cv.GenerateID(CONF_NEOKEY_ID): cv.use_id(NeoKeyComponent),
     }
 )
