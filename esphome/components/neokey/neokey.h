@@ -1,7 +1,10 @@
 #pragma once
 
 #include "esphome/core/component.h"
+#include "esphome/core/log.h"
 #include "esphome/components/binary_sensor/binary_sensor.h"
+#include "esphome/components/i2c/i2c.h"
+#include "esphome/components/light/addressable_light.h"
 
 #include "Adafruit_NeoKey_1x4.h"
 #include "seesaw_neopixel.h"
@@ -9,31 +12,44 @@
 namespace esphome {
 namespace neokey {
 
-class NeoKeyBinarySensor;
-
-class NeoKeyComponent : public Component {
+class NeoKeyComponent : public light::AddressableLight, public i2c::I2CDevice {
  public:
-  void register_key(NeoKeyBinarySensor *key) { this->children_.push_back(key); }
-  void set_address(uint8_t address) { this->address_ = address; }
-
   void setup() override;
   void loop() override;
   void dump_config() override;
   float get_setup_priority() const override { return setup_priority::DATA; }
 
- protected:
-  std::vector<NeoKeyBinarySensor *> children_;
-  uint8_t address_;
-  Adafruit_NeoKey_1x4 neokey_;
-};
+  void set_key_1_sensor(binary_sensor::BinarySensor *sensor) { key_1_sensor_ = sensor; }
+  void set_key_2_sensor(binary_sensor::BinarySensor *sensor) { key_2_sensor_ = sensor; }
+  void set_key_3_sensor(binary_sensor::BinarySensor *sensor) { key_3_sensor_ = sensor; }
+  void set_key_4_sensor(binary_sensor::BinarySensor *sensor) { key_4_sensor_ = sensor; }
 
-/// Simple helper class to expose a touch pad value as a binary sensor.
-class NeoKeyBinarySensor : public binary_sensor::BinarySensor {
- public:
-  NeoKeyBinarySensor(uint8_t key);
+  int32_t size() const override { return this->neokey_.pixels.numPixels(); }
+  void write_state(light::LightState *state) override;
+  void clear_effect_data() override {
+    for (int i = 0; i < this->size(); i++)
+      this->effect_data_[i] = 0;
+  }
+  light::LightTraits get_traits() override {
+    auto traits = light::LightTraits();
+    traits.set_supported_color_modes({light::ColorMode::RGB});
+    return traits;
+  }
  protected:
-  friend NeoKeyComponent;
-  uint8_t key_;
+  Adafruit_NeoKey_1x4 neokey_;
+  binary_sensor::BinarySensor *key_1_sensor_{nullptr};
+  binary_sensor::BinarySensor *key_2_sensor_{nullptr};
+  binary_sensor::BinarySensor *key_3_sensor_{nullptr};
+  binary_sensor::BinarySensor *key_4_sensor_{nullptr};
+
+  uint8_t *buf_{nullptr};
+  uint8_t *effect_data_{nullptr};
+
+  light::ESPColorView get_view_internal(int32_t index) const override {
+    uint8_t *base = this->buf_ + 3ULL * index;
+
+    return light::ESPColorView(base + 0, base + 1, base + 2, nullptr, this->effect_data_ + index, &this->correction_);
+  }
 };
 
 }  // namespace neokey

@@ -1,5 +1,4 @@
 #include "neokey.h"
-#include "esphome/core/log.h"
 
 namespace esphome {
 namespace neokey {
@@ -9,34 +8,69 @@ static const char *const TAG = "neokey";
 void NeoKeyComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up NeoKey...");
 
-  if (!neokey_.begin(address_)) {
+  // Byte each for Red, Green, and Blue
+  this->buf_ = new uint8_t[this->size() * 3]; 
+  this->effect_data_ = new uint8_t[this->size()];
+
+  // Clear buffer
+  memset(this->buf_, 0x00, this->size() * 3);
+  memset(this->effect_data_, 0x00, this->size());
+
+  if (!this->neokey_.begin(this->address_)) {
     this->mark_failed();
     return;
+  }
+
+  // Pulse all the LEDs on to show we're working
+  for (size_t i = 0; i < this->size(); i++) {
+    this->neokey_.pixels.setPixelColor(i, 0x808080);  // make each LED white
+    this->neokey_.pixels.show();
+    delay(50);
+  }
+
+  for (size_t i = 0; i < this->size(); i++) {
+    this->neokey_.pixels.setPixelColor(i, 0x000000);
+    this->neokey_.pixels.show();
+    delay(50);
   }
 }
 
 void NeoKeyComponent::loop() {
-  uint8_t buttons = neokey_.read();
+  uint8_t buttons = this->neokey_.read();
+  ESP_LOGVV(TAG, "Buttons: 0b" BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(buttons));
 
   // Check each button
-  for (auto *child : this->children_) {
-    uint8_t key = child->key_;
-    if (buttons & (1 << key)) {
-      ESP_LOGD(TAG, "Key %d press" , key);
-      child->publish_state(true);
-    } else {
-      ESP_LOGD(TAG, "Key %d release" , key);
-      child->publish_state(false);
-    }
-  }
+  this->key_1_sensor_->publish_state(buttons & (1 << 0));
+  this->key_2_sensor_->publish_state(buttons & (1 << 1));
+  this->key_3_sensor_->publish_state(buttons & (1 << 2));
+  this->key_4_sensor_->publish_state(buttons & (1 << 3));
 }
 
 void NeoKeyComponent::dump_config() {
   ESP_LOGCONFIG(TAG, "Config for NeoKey:");
-  ESP_LOGCONFIG(TAG, "  Address: %s", address_);
+  LOG_I2C_DEVICE(this);
+
+  LOG_BINARY_SENSOR("  ", "Key 1", this->key_1_sensor_);
+  LOG_BINARY_SENSOR("  ", "Key 2", this->key_2_sensor_);
+  LOG_BINARY_SENSOR("  ", "Key 3", this->key_3_sensor_);
+  LOG_BINARY_SENSOR("  ", "Key 4", this->key_4_sensor_);
 }
 
-NeoKeyBinarySensor::NeoKeyBinarySensor(uint8_t key) : key_(key) {}
+void NeoKeyComponent::write_state(light::LightState *state) {
+  ESP_LOGD(TAG, "Writing state...");
+  for (size_t i = 0; i < this->size(); i++) {
+    size_t pos = i * 3;
+    uint8_t red = *(this->buf_ + pos + 0);
+    uint8_t green = *(this->buf_ + pos + 1);
+    uint8_t blue = *(this->buf_ + pos + 2);
+    ESP_LOGD(TAG, "Red:   0b" BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(red));
+    ESP_LOGD(TAG, "Green: 0b" BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(green));
+    ESP_LOGD(TAG, "Blue:  0b" BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(blue));
+
+    this->neokey_.pixels.setPixelColor(i, red, green, blue);
+  }
+  this->neokey_.pixels.show();
+}
 
 }  // namespace neokey
 }  // namespace esphome
