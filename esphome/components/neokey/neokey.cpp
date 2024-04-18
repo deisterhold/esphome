@@ -8,27 +8,27 @@ static const char *const TAG = "neokey";
 void NeoKeyComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up NeoKey...");
 
-  if (!this->neokey_.begin(this->address_)) {
+  if (!this->hub_.begin(this->address_)) {
     this->mark_failed();
     return;
   }
 
   // Pulse all the LEDs on to show we're working
-  for (size_t i = 0; i < this->size(); i++) {
-    this->neokey_.pixels.setPixelColor(i, 0x808080);  // make each LED white
-    this->neokey_.pixels.show();
+  for (size_t i = 0; i < this->hub_->pixels.numPixels(); i++) {
+    this->hub_.pixels.setPixelColor(i, 0x808080);  // make each LED white
+    this->hub_.pixels.show();
     delay(50);
   }
 
-  for (size_t i = 0; i < this->size(); i++) {
-    this->neokey_.pixels.setPixelColor(i, 0x000000);
-    this->neokey_.pixels.show();
+  for (size_t i = 0; i < this->hub_->pixels.numPixels(); i++) {
+    this->hub_.pixels.setPixelColor(i, 0x000000);
+    this->hub_.pixels.show();
     delay(50);
   }
 }
 
 void NeoKeyComponent::update() {
-  uint8_t keys = this->neokey_.read();
+  uint8_t keys = this->hub_.read();
   ESP_LOGVV(TAG, "Keys: 0b" BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(keys));
 
   if (this->listeners_.empty())
