@@ -21,7 +21,23 @@ class KeyListener {
   virtual void keys_update(uint8_t keys){};
 };
 
-class NeoKeyComponent;
+class NeoKeyLight;
+
+class NeoKeyComponent : public PollingComponent, public i2c::I2CDevice {
+ public:
+  void setup() override;
+  void update() override;
+  void dump_config() override;
+  float get_setup_priority() const override { return setup_priority::DATA; }
+
+  // Binary Sensors
+  void register_listener(KeyListener *listener) { this->listeners_.push_back(listener); }
+
+ protected:
+  friend NeoKeyLight;
+  Adafruit_NeoKey_1x4 hub_;
+  std::vector<KeyListener *> listeners_{};
+};
 
 class NeoKeyBinarySensor : public binary_sensor::BinarySensor, public KeyListener {
  public:
@@ -57,22 +73,6 @@ class NeoKeyLight : public light::AddressableLight {
 
     return light::ESPColorView(base + 0, base + 1, base + 2, nullptr, this->effect_data_ + index, &this->correction_);
   }
-};
-
-class NeoKeyComponent : public PollingComponent, public i2c::I2CDevice {
- public:
-  void setup() override;
-  void update() override;
-  void dump_config() override;
-  float get_setup_priority() const override { return setup_priority::DATA; }
-
-  // Binary Sensors
-  void register_listener(KeyListener *listener) { this->listeners_.push_back(listener); }
-
- protected:
-  friend NeoKeyLight;
-  Adafruit_NeoKey_1x4 hub_;
-  std::vector<KeyListener *> listeners_{};
 };
 
 }  // namespace neokey
