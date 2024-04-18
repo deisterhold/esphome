@@ -3,8 +3,6 @@
 namespace esphome {
 namespace neokey {
 
-static const char *const TAG = "neokey";
-
 void NeoKeyComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up NeoKey...");
 

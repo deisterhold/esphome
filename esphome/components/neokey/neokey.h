@@ -15,6 +15,8 @@ class KeyListener {
   virtual void keys_update(uint8_t keys){};
 };
 
+static const char *const TAG = "neokey";
+
 class NeoKeyComponent : public PollingComponent, public i2c::I2CDevice {
  public:
   void setup() override;
