@@ -10,7 +10,6 @@ NeoKeyLight = neokey_ns.class_("NeoKeyLight", light.AddressableLight)
 
 CONFIG_SCHEMA = light.ADDRESSABLE_LIGHT_SCHEMA.extend(
     {
-        cv.GenerateID(): cv.declare_id(NeoKeyLight),
         cv.GenerateID(CONF_NEOKEY_ID): cv.use_id(NeoKeyComponent),
     }
 )
@@ -19,7 +18,6 @@ CONFIG_SCHEMA = light.ADDRESSABLE_LIGHT_SCHEMA.extend(
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await light.register_light(var, config)
-    await cg.register_component(var, config)
 
     hub = await cg.get_variable(config[CONF_NEOKEY_ID])
     cg.add(var.set_neokey(hub))
