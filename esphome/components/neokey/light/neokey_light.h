@@ -1,6 +1,5 @@
 #pragma once
 
-#include "esphome/core/component.h"
 #include "esphome/core/log.h"
 #include "esphome/components/light/addressable_light.h"
 #include "../neokey.h"
@@ -11,7 +10,7 @@ namespace neokey {
 
 #define NUM_BYTES_PER_LED 3
 
-class NeoKeyLight : public light::AddressableLight, public Component {
+class NeoKeyLight : public light::AddressableLight {
  public:
   void setup() override;
   void set_neokey(NeoKeyComponent *neokey) { neokey_ = neokey; }
