@@ -21,6 +21,8 @@ class KeyListener {
   virtual void keys_update(uint8_t keys){};
 };
 
+class NeoKeyComponent;
+
 class NeoKeyBinarySensor : public binary_sensor::BinarySensor, public KeyListener {
  public:
   void set_key(uint8_t key) { key_ = key; };
