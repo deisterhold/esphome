@@ -17,16 +17,14 @@ CONF_NEOKEY_ID = "neokey_id"
 
 
 CONFIG_SCHEMA = (
-    cv.All(
-        cv.Schema(
-            {
-                cv.GenerateID(): cv.declare_id(NeoKeyComponent),
-            }
-        ),
-        cv.only_with_arduino,
+    cv.Schema(
+        {
+            cv.GenerateID(): cv.declare_id(NeoKeyComponent),
+        }
     )
     .extend(cv.polling_component_schema("10ms"))
-    .extend(i2c.i2c_device_schema(0x30))
+    .extend(i2c.i2c_device_schema(0x30)),
+    cv.only_with_arduino,
 )
 
 
