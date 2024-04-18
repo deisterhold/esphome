@@ -29,9 +29,9 @@ void NeoKeyLight::write_state(light::LightState *state) {
     ESP_LOGD(TAG, "Green: 0b" BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(green));
     ESP_LOGD(TAG, "Blue:  0b" BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(blue));
 
-    this->neokey_->pixels.setPixelColor(i, red, green, blue);
+    this->neokey_->hub_.pixels.setPixelColor(i, red, green, blue);
   }
-  this->neokey_->pixels.show();
+  this->neokey_->hub_.pixels.show();
 }
 
 }  // namespace neokey

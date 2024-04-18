@@ -14,7 +14,7 @@ class NeoKeyLight : public light::AddressableLight {
  public:
   void setup() override;
   void set_neokey(NeoKeyComponent *neokey) { neokey_ = neokey; }
-  int32_t size() const override { return this->neokey_ == nullptr ? 0 : this->neokey_->pixels.numPixels(); }
+  int32_t size() const override { return this->neokey_ == nullptr ? 0 : this->neokey_->hub_.pixels.numPixels(); }
   void write_state(light::LightState *state) override;
   void clear_effect_data() override {
     for (int i = 0; i < this->size(); i++)
@@ -26,7 +26,7 @@ class NeoKeyLight : public light::AddressableLight {
     return traits;
   }
  protected:
-  Adafruit_NeoKey_1x4 *neokey_;
+  NeoKeyComponent *neokey_;
 
   uint8_t *buf_{nullptr};
   uint8_t *effect_data_{nullptr};
