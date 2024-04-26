@@ -8,18 +8,11 @@ static const char *const TAG = "matrix_keypad";
 
 void MatrixKeypad::setup() {
   for (auto *pin : this->rows_) {
-    if (!has_diodes_) {
-      pin->pin_mode(gpio::FLAG_INPUT);
-    } else {
-      pin->digital_write(!has_pulldowns_);
-    }
+    pin->pin_mode(gpio::FLAG_OUTPUT);
+    pin->digital_write(false);
   }
   for (auto *pin : this->columns_) {
-    if (has_pulldowns_) {
-      pin->pin_mode(gpio::FLAG_INPUT);
-    } else {
-      pin->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
-    }
+    pin->pin_mode(gpio::FLAG_INPUT);
   }
 }
 
@@ -31,11 +24,9 @@ void MatrixKeypad::loop() {
   bool error = false;
   int pos = 0, row, col;
   for (auto *row : this->rows_) {
-    if (!has_diodes_)
-      row->pin_mode(gpio::FLAG_OUTPUT);
-    row->digital_write(has_pulldowns_);
+    row->digital_write(true);
     for (auto *col : this->columns_) {
-      if (col->digital_read() == has_pulldowns_) {
+      if (col->digital_read()) {
         if (key != -1) {
           error = true;
         } else {
@@ -44,9 +35,7 @@ void MatrixKeypad::loop() {
       }
       pos++;
     }
-    row->digital_write(!has_pulldowns_);
-    if (!has_diodes_)
-      row->pin_mode(gpio::FLAG_INPUT);
+    row->digital_write(false);
   }
   if (error)
     return;
