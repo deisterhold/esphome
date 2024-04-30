@@ -76,8 +76,8 @@ void MatrixKeypad::loop() {
   if ((this->pressed_key_ == key) || (now - active_start < this->debounce_time_))
     return;
 
-  row = key / this->columns_.size();
-  col = key % this->columns_.size();
+  row = key % this->columns_.size();
+  col = key / this->columns_.size();
   ESP_LOGD(TAG, "key @ row %d, col %d pressed", row, col);
   for (auto &listener : this->listeners_)
     listener->button_pressed(row, col);
