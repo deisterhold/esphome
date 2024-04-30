@@ -31,12 +31,6 @@ void MatrixKeypad::loop() {
     col->digital_write(false);
     for (auto *row : this->rows_) {
       bool pressed = !row->digital_read();
-      // if (pressed && !(currentState & _KEY_PRESSED)) {
-      //   evt = KEY_JUST_PRESSED;
-
-      // } else if (!pressed && (currentState & _KEY_PRESSED)) {
-      //   evt = KEY_JUST_RELEASED;
-      // }
       if (pressed) {
         if (key != -1) {
           error = true;
@@ -53,8 +47,8 @@ void MatrixKeypad::loop() {
 
   if (key != active_key) {
     if ((active_key != -1) && (this->pressed_key_ == active_key)) {
-      row = this->pressed_key_ % this->columns_.size();
-      col = this->pressed_key_ / this->columns_.size();
+      row = this->pressed_key_ % this->rows_.size();
+      col = this->pressed_key_ / this->rows_.size();
       ESP_LOGD(TAG, "key @ row %d, col %d released", row, col);
       for (auto &listener : this->listeners_)
         listener->button_released(row, col);
@@ -76,8 +70,8 @@ void MatrixKeypad::loop() {
   if ((this->pressed_key_ == key) || (now - active_start < this->debounce_time_))
     return;
 
-  row = key % this->columns_.size();
-  col = key / this->columns_.size();
+  row = key % this->rows_.size();
+  col = key / this->rows_.size();
   ESP_LOGD(TAG, "key @ row %d, col %d pressed", row, col);
   for (auto &listener : this->listeners_)
     listener->button_pressed(row, col);
