@@ -53,8 +53,8 @@ void MatrixKeypad::loop() {
 
   if (key != active_key) {
     if ((active_key != -1) && (this->pressed_key_ == active_key)) {
-      row = this->pressed_key_ / this->columns_.size();
-      col = this->pressed_key_ % this->columns_.size();
+      row = this->pressed_key_ % this->columns_.size();
+      col = this->pressed_key_ / this->columns_.size();
       ESP_LOGD(TAG, "key @ row %d, col %d released", row, col);
       for (auto &listener : this->listeners_)
         listener->button_released(row, col);
