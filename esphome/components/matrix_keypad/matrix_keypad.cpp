@@ -7,26 +7,37 @@ namespace matrix_keypad {
 static const char *const TAG = "matrix_keypad";
 
 void MatrixKeypad::setup() {
-  for (auto *pin : this->rows_) {
-    pin->pin_mode(gpio::FLAG_OUTPUT);
-    pin->digital_write(false);
-  }
   for (auto *pin : this->columns_) {
-    pin->pin_mode(gpio::FLAG_INPUT);
+    pin->pin_mode(gpio::FLAG_OUTPUT);
+    pin->digital_write(true);
+  }
+  for (auto *pin : this->rows_) {
+    pin->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   }
 }
 
 void MatrixKeypad::loop() {
+  for (auto *pin : this->columns_) {
+    pin->digital_write(true);
+  }
+
   static uint32_t active_start = 0;
   static int active_key = -1;
   uint32_t now = millis();
   int key = -1;
   bool error = false;
   int pos = 0, row, col;
-  for (auto *row : this->rows_) {
-    row->digital_write(true);
-    for (auto *col : this->columns_) {
-      if (col->digital_read()) {
+  for (auto *col : this->columns_) {
+    col->digital_write(false);
+    for (auto *row : this->rows_) {
+      bool pressed = !row->digital_read();
+      // if (pressed && !(currentState & _KEY_PRESSED)) {
+      //   evt = KEY_JUST_PRESSED;
+
+      // } else if (!pressed && (currentState & _KEY_PRESSED)) {
+      //   evt = KEY_JUST_RELEASED;
+      // }
+      if (pressed) {
         if (key != -1) {
           error = true;
         } else {
@@ -35,7 +46,7 @@ void MatrixKeypad::loop() {
       }
       pos++;
     }
-    row->digital_write(false);
+    col->digital_write(true);
   }
   if (error)
     return;
