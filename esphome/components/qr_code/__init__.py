@@ -24,8 +24,8 @@ ECC = {
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.Required(CONF_ID): cv.declare_id(QRCode),
-        cv.Required(CONF_VALUE): cv.string,
-        cv.Optional(CONF_ECC, default="LOW"): cv.enum(ECC, upper=True),
+        cv.Required(CONF_VALUE): cv.templatable(cv.string),
+        cv.Optional(CONF_ECC, default="LOW"): cv.templatable(cv.enum(ECC, upper=True)),
     }
 )
 
@@ -34,8 +34,10 @@ async def to_code(config):
     cg.add_library("wjtje/qr-code-generator-library", "^1.7.0")
 
     var = cg.new_Pvariable(config[CONF_ID])
-    cg.add(var.set_value(config[CONF_VALUE]))
-    cg.add(var.set_ecc(ECC[config[CONF_ECC]]))
+    template_ = await cg.templatable(config[CONF_VALUE], args, cg.std_string)
+    cg.add(var.set_value(template_))
+    template_ = await cg.templatable(config[CONF_ECC], args, qrcodegen_Ecc)
+    cg.add(var.set_ecc(template_))
     await cg.register_component(var, config)
 
     cg.add_define("USE_QR_CODE")
