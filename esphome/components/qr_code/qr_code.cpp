@@ -32,7 +32,7 @@ void QrCode::generate_qr_code() {
   ESP_LOGV(TAG, "Generating QR code...");
   uint8_t tempbuffer[qrcodegen_BUFFER_LEN_MAX];
 
-  String value;
+  std::string value;
 
   if (this->f_.has_value()) {
     value = (*this->f_)().value();
