@@ -19,6 +19,7 @@ class QrCode : public Component {
 
   void dump_config() override;
 
+  void set_template(std::function<optional<std::string>()> &&f);
   void set_value(const std::string &value);
   void set_ecc(qrcodegen_Ecc ecc);
 
@@ -27,6 +28,7 @@ class QrCode : public Component {
   uint8_t get_size();
 
  protected:
+  optional<std::function<optional<std::string>()>> f_{};
   std::string value_;
   qrcodegen_Ecc ecc_;
   bool needs_update_ = true;
