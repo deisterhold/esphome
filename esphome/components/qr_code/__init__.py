@@ -40,7 +40,7 @@ async def to_code(config):
         template_ = await cg.process_lambda(
             config[CONF_LAMBDA], [], return_type=cg.optional.template(cg.std_string)
         )
-        cg.add(var.set_value(template_))
+        cg.add(var.set_template(template_))
 
     if CONF_VALUE in config:
         cg.add(var.set_value(config[CONF_VALUE]))
