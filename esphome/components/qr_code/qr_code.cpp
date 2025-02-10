@@ -13,7 +13,7 @@ void QrCode::dump_config() {
   ESP_LOGCONFIG(TAG, "  Value: '%s'", this->value_.c_str());
 }
 
-void TemplateTextSensor::set_template(std::function<optional<std::string>()> &&f) {
+void QrCode::set_template(std::function<optional<std::string>()> &&f) {
   this->f_ = f;
   this->needs_update_ = true;
 }
