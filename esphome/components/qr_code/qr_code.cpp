@@ -13,6 +13,11 @@ void QrCode::dump_config() {
   ESP_LOGCONFIG(TAG, "  Value: '%s'", this->value_.c_str());
 }
 
+void TemplateTextSensor::set_template(std::function<optional<std::string>()> &&f) {
+  this->f_ = f;
+  this->needs_update_ = true;
+}
+
 void QrCode::set_value(const std::string &value) {
   this->value_ = value;
   this->needs_update_ = true;
@@ -27,7 +32,15 @@ void QrCode::generate_qr_code() {
   ESP_LOGV(TAG, "Generating QR code...");
   uint8_t tempbuffer[qrcodegen_BUFFER_LEN_MAX];
 
-  if (!qrcodegen_encodeText(this->value_.c_str(), tempbuffer, this->qr_, this->ecc_, qrcodegen_VERSION_MIN,
+  String value;
+
+  if (this->f_.has_value()) {
+    value = (*this->f_)().value();
+  } else {
+    value = this->value_;
+  }
+
+  if (!qrcodegen_encodeText(value.c_str(), tempbuffer, this->qr_, this->ecc_, qrcodegen_VERSION_MIN,
                             qrcodegen_VERSION_MAX, qrcodegen_Mask_AUTO, true)) {
     ESP_LOGE(TAG, "Failed to generate QR code");
   }
