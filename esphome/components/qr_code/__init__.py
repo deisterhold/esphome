@@ -1,6 +1,6 @@
 import esphome.config_validation as cv
 import esphome.codegen as cg
-from esphome.const import CONF_ID, CONF_VALUE
+from esphome.const import CONF_ID, CONF_LAMBDA, CONF_VALUE
 
 CONF_SCALE = "scale"
 CONF_ECC = "ecc"
@@ -24,7 +24,8 @@ ECC = {
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.Required(CONF_ID): cv.declare_id(QRCode),
-        cv.Required(CONF_VALUE): cv.string,
+        cv.Exclusive(CONF_VALUE, CONF_VALUE): cv.string,
+        cv.Exclusive(CONF_LAMBDA, CONF_VALUE): cv.returning_lambda,
         cv.Optional(CONF_ECC, default="LOW"): cv.enum(ECC, upper=True),
     }
 )
@@ -34,7 +35,16 @@ async def to_code(config):
     cg.add_library("wjtje/qr-code-generator-library", "^1.7.0")
 
     var = cg.new_Pvariable(config[CONF_ID])
-    cg.add(var.set_value(config[CONF_VALUE]))
+
+    if CONF_LAMBDA in config:
+        template_ = await cg.process_lambda(
+            config[CONF_LAMBDA], [], return_type=cg.optional.template(cg.std_string)
+        )
+        cg.add(var.set_value(template_))
+
+    if CONF_VALUE in config:
+        cg.add(var.set_value(config[CONF_VALUE]))
+    
     cg.add(var.set_ecc(ECC[config[CONF_ECC]]))
     await cg.register_component(var, config)
 
