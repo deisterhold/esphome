@@ -1,0 +1,9 @@
+pn532_uart:
+  uart_id: uart_bus
+  id: pn532_nfcc_uart
+
+binary_sensor:
+  - platform: pn532
+    pn532_id: pn532_nfcc_uart
+    name: PN532 NFC Tag
+    uid: 74-10-37-94
