@@ -11,6 +11,7 @@ namespace pn532_uart {
 
 class PN532UART : public pn532::PN532, public uart::UARTDevice {
  public:
+  void setup() override;
   void dump_config() override;
 
  protected:

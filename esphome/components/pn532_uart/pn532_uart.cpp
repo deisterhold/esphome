@@ -12,9 +12,21 @@ namespace pn532_uart {
 
 static const char *const TAG = "pn532_uart";
 
-bool PN532UART::is_read_ready() {
-  return (this->available() != 0);
+void PN532Spi::setup() {
+  // clear out anything in read buffer
+  while (this->available())
+    this->read();
+
+  delay(10);
+  PN532::setup();
 }
+
+void PN532UART::dump_config() {
+  PN532::dump_config();
+  UARTDevice::dump_config();
+}
+
+bool PN532UART::is_read_ready() { return (this->available() != 0); }
 
 bool PN532UART::write_data(const std::vector<uint8_t> &data) {
   this->write_array(data);
@@ -115,11 +127,6 @@ uint8_t PN532UART::read_response_length_() {
   if (full_len == 0)
     len = 0;
   return len;
-}
-
-void PN532UART::dump_config() {
-  PN532::dump_config();
-  // LOG_UART_DEVICE(this);
 }
 
 }  // namespace pn532_uart
