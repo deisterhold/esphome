@@ -13,11 +13,7 @@ namespace pn532_uart {
 static const char *const TAG = "pn532_uart";
 
 bool PN532UART::is_read_ready() {
-  uint8_t ready;
-  if (!this->read_byte(&ready)) {
-    return false;
-  }
-  return ready == 0x01;
+  return (this->available() != 0);
 }
 
 bool PN532UART::write_data(const std::vector<uint8_t> &data) {
