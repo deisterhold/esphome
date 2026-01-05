@@ -12,7 +12,7 @@ namespace pn532_uart {
 
 static const char *const TAG = "pn532_uart";
 
-void PN532Spi::setup() {
+void PN532UART::setup() {
   // clear out anything in read buffer
   while (this->available())
     this->read();
@@ -23,7 +23,7 @@ void PN532Spi::setup() {
 
 void PN532UART::dump_config() {
   PN532::dump_config();
-  UARTDevice::dump_config();
+  ESP_LOGCONFIG(TAG, "  Baud rate: %d", this->get_baud_rate());
 }
 
 bool PN532UART::is_read_ready() { return (this->available() != 0); }
