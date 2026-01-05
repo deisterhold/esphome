@@ -23,7 +23,7 @@ void PN532UART::setup() {
 
 void PN532UART::dump_config() {
   PN532::dump_config();
-  ESP_LOGCONFIG(TAG, "  Baud rate: %d", this->get_baud_rate());
+  ESP_LOGCONFIG(TAG, "  Baud rate: %d", this->parent_->get_baud_rate());
 }
 
 bool PN532UART::is_read_ready() { return (this->available() != 0); }
