@@ -52,7 +52,7 @@ bool PN532UART::read_data(std::vector<uint8_t> &data, uint8_t len) {
 
   data.resize(len + 1);
   this->read_array(data.data(), len + 1);
-  std::reverse(data.begin() + 1, data.end());
+
   ESP_LOGV(TAG, "Read data: %s", format_hex_pretty(data).c_str());
   return true;
 }
