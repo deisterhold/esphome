@@ -1,7 +1,7 @@
 #include "pn532_uart.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/log.h"
-// #include "esphome/core/hal.h"
+#include "esphome/core/hal.h"
 
 // Based on:
 // - https://cdn-shop.adafruit.com/datasheets/PN532C106_Application+Note_v1.2.pdf
@@ -52,10 +52,7 @@ bool PN532UART::read_data(std::vector<uint8_t> &data, uint8_t len) {
   data.resize(len + 1);
   this->read_array(data.data(), len + 1);
   // std::reverse(data.begin(), data.end());
-#if ESPHOME_LOG_LEVEL >= ESPHOME_LOG_LEVEL_VERBOSE
-  char hex_buf[format_hex_pretty_size(PN532_MAX_LOG_BYTES)];
-#endif
-  ESP_LOGV(TAG, "Read data: %s", format_hex_pretty_to(hex_buf, sizeof(hex_buf), data.data(), data.size()));
+  ESP_LOGV(TAG, "Read data: %s", format_hex_pretty(data));
   return true;
 }
 
