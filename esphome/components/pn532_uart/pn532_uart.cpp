@@ -38,6 +38,7 @@ void PN532UART::dump_config() {
 bool PN532UART::is_read_ready() { return (this->available() != 0); }
 
 bool PN532UART::write_data(const std::vector<uint8_t> &data) {
+  ESP_LOGV(TAG, "Write data: %s", format_hex_pretty(data).c_str());
   this->write_array(data.data(), data.size());
   return true;
 }
