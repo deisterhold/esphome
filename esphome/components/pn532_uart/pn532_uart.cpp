@@ -8,8 +8,7 @@
 // - https://www.nxp.com/docs/en/nxp/application-notes/AN133910.pdf
 // - https://www.nxp.com/docs/en/nxp/application-notes/153710.pdf
 
-namespace esphome {
-namespace pn532_uart {
+namespace esphome::pn532_uart {
 
 static const char *const TAG = "pn532_uart";
 
@@ -141,5 +140,4 @@ uint8_t PN532UART::read_response_length_() {
   return len;
 }
 
-}  // namespace pn532_uart
-}  // namespace esphome
+}  // namespace esphome::pn532_uart

@@ -6,8 +6,7 @@
 
 #include <vector>
 
-namespace esphome {
-namespace pn532_uart {
+namespace esphome::pn532_uart {
 
 class PN532UART : public pn532::PN532, public uart::UARTDevice {
  public:
@@ -22,5 +21,4 @@ class PN532UART : public pn532::PN532, public uart::UARTDevice {
   uint8_t read_response_length_();
 };
 
-}  // namespace pn532_uart
-}  // namespace esphome
+}  // namespace esphome::pn532_uart
