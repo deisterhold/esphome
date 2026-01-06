@@ -18,6 +18,11 @@ void PN532UART::setup() {
     this->read();
 
   delay(10);
+
+  // wakeup device
+  this->write_array({0x55, 0x00, 0x00});
+  delay(2);
+
   PN532::setup();
 }
 
