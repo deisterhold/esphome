@@ -34,7 +34,7 @@ void PN532UART::dump_config() {
 bool PN532UART::is_read_ready() { return (this->available() != 0); }
 
 bool PN532UART::write_data(const std::vector<uint8_t> &data) {
-  this->write_array(data);
+  this->write_array(data.data(), data.size());
   return true;
 }
 
@@ -47,7 +47,7 @@ bool PN532UART::read_data(std::vector<uint8_t> &data, uint8_t len) {
 
   data.resize(len + 1);
   this->read_array(data.data(), len + 1);
-  std::reverse(data.begin(), data.end());
+  // std::reverse(data.begin(), data.end());
   return true;
 }
 
