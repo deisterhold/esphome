@@ -47,6 +47,7 @@ bool PN532UART::read_data(std::vector<uint8_t> &data, uint8_t len) {
 
   data.resize(len + 1);
   this->read_array(data.data(), len + 1);
+  std::reverse(data.begin(), data.end());
   return true;
 }
 
