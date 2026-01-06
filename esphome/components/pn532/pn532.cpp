@@ -285,6 +285,8 @@ bool PN532::read_ack_() {
     return false;
   }
 
+  ESP_LOGV(TAG, "ACK response: 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X", data[1], data[2], data[3], data[4],
+           data[5], data[6]);
   bool matches = (data[1] == 0x00 &&                     // preamble
                   data[2] == 0x00 &&                     // start of packet
                   data[3] == 0xFF && data[4] == 0x00 &&  // ACK packet code
