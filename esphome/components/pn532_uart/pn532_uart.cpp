@@ -12,6 +12,9 @@ namespace pn532_uart {
 
 static const char *const TAG = "pn532_uart";
 
+// Maximum bytes to log in verbose hex output
+static constexpr size_t PN532_MAX_LOG_BYTES = 64;
+
 void PN532UART::setup() {
   // clear out anything in read buffer
   while (this->available())
@@ -48,6 +51,10 @@ bool PN532UART::read_data(std::vector<uint8_t> &data, uint8_t len) {
   data.resize(len + 1);
   this->read_array(data.data(), len + 1);
   // std::reverse(data.begin(), data.end());
+#if ESPHOME_LOG_LEVEL >= ESPHOME_LOG_LEVEL_VERBOSE
+  char hex_buf[format_hex_pretty_size(PN532_MAX_LOG_BYTES)];
+#endif
+  ESP_LOGV(TAG, "Read data: %s", format_hex_pretty_to(hex_buf, sizeof(hex_buf), data.data(), data.size()));
   return true;
 }
 
