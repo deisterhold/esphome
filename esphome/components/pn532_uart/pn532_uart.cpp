@@ -34,7 +34,7 @@ void PN532UART::dump_config() {
   ESP_LOGCONFIG(TAG, "  Baud rate: %d", this->parent_->get_baud_rate());
 }
 
-bool PN532UART::is_read_ready() { return (this->available() != 0); }
+bool PN532UART::is_read_ready() { return (this->available() > 0); }
 
 bool PN532UART::write_data(const std::vector<uint8_t> &data) {
   ESP_LOGV(TAG, "Write data: %s", format_hex_pretty(data).c_str());
