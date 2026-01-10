@@ -74,25 +74,6 @@ void PN532::setup() {
     return;
   }
 
-  // Get version data
-  if (!this->write_command_({PN532_COMMAND_VERSION_DATA})) {
-    ESP_LOGW(TAG, "Error sending version command, trying again");
-    if (!this->write_command_({PN532_COMMAND_VERSION_DATA})) {
-      ESP_LOGE(TAG, "Error sending version command");
-      this->mark_failed();
-      return;
-    }
-  }
-
-  std::vector<uint8_t> version_data;
-  if (!this->read_response(PN532_COMMAND_VERSION_DATA, version_data)) {
-    ESP_LOGE(TAG, "Error getting version");
-    this->mark_failed();
-    return;
-  }
-  ESP_LOGD(TAG, "Found chip PN5%02X", version_data[0]);
-  ESP_LOGD(TAG, "Firmware ver. %d.%d", version_data[1], version_data[2]);
-
   this->turn_off_rf_();
 }
 
