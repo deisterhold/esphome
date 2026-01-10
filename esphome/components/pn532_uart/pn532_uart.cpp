@@ -16,15 +16,15 @@ static const char *const TAG = "pn532_uart";
 static constexpr size_t PN532_MAX_LOG_BYTES = 64;
 
 void PN532UART::setup() {
+  // wakeup device
+  this->write_array({0x55, 0x55, 0x00, 0x00, 0x00});
+  delay(2);
+
   // clear out anything in read buffer
   while (this->available())
     this->read();
 
   delay(10);
-
-  // wakeup device
-  this->write_array({0x55, 0x55, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00});
-  delay(2);
 
   PN532::setup();
 }
