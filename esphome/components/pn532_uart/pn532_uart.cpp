@@ -37,6 +37,9 @@ void PN532UART::dump_config() {
 bool PN532UART::is_read_ready() { return (this->available() > 0); }
 
 bool PN532UART::write_data(const std::vector<uint8_t> &data) {
+#if ESPHOME_LOG_LEVEL >= ESPHOME_LOG_LEVEL_VERBOSE
+  char hex_buf[format_hex_pretty_size(PN532_MAX_LOG_BYTES)];
+#endif
   ESP_LOGV(TAG, "Writing data: %s", format_hex_pretty_to(hex_buf, sizeof(hex_buf), data.data(), data.size()));
   this->write_array(data.data(), data.size());
   return true;
