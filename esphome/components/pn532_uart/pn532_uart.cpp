@@ -37,22 +37,26 @@ void PN532UART::dump_config() {
 bool PN532UART::is_read_ready() { return (this->available() > 0); }
 
 bool PN532UART::write_data(const std::vector<uint8_t> &data) {
-  ESP_LOGV(TAG, "Write data: %s", format_hex_pretty(data).c_str());
+  ESP_LOGV(TAG, "Writing data: %s", format_hex_pretty_to(hex_buf, sizeof(hex_buf), data.data(), data.size()));
   this->write_array(data.data(), data.size());
   return true;
 }
 
 bool PN532UART::read_data(std::vector<uint8_t> &data, uint8_t len) {
-  delay(1);
-
   if (this->read_ready_(true) != pn532::PN532ReadReady::READY) {
     return false;
   }
 
+  delay(1);
+
+  ESP_LOGV(TAG, "Reading data");
+
   data.resize(len + 1);
   this->read_array(data.data(), len + 1);
-
-  ESP_LOGV(TAG, "Read data: %s", format_hex_pretty(data).c_str());
+#if ESPHOME_LOG_LEVEL >= ESPHOME_LOG_LEVEL_VERBOSE
+  char hex_buf[format_hex_pretty_size(PN532_MAX_LOG_BYTES)];
+#endif
+  ESP_LOGV(TAG, "Read data: %s", format_hex_pretty_to(hex_buf, sizeof(hex_buf), data.data(), data.size()));
   return true;
 }
 
